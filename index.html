@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tseka Junior Portfolio</title>
+  <link rel="icon" href="/images/logo.png" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in-up {
+      animation: fade-in-up 0.8s ease-out forwards;
+    }
+    .animation-delay-500 { animation-delay: 0.5s; }
+    .animation-delay-1000 { animation-delay: 1s; }
+
+    @keyframes blob {
+      0% {
+        transform: translate(0px, 0px) scale(1);
+      }
+      33% {
+        transform: translate(30px, -50px) scale(1.1);
+      }
+      66% {
+        transform: translate(-20px, 20px) scale(0.9);
+      }
+      100% {
+        transform: translate(0px, 0px) scale(1);
+      }
+    }
+    .animate-blob {
+      animation: blob 7s infinite;
+    }
+    .animation-delay-2000 { animation-delay: 2s; }
+    .animation-delay-4000 { animation-delay: 4s; }
+
+ #chatbot {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+
+#chat-icon {
+  background: linear-gradient(135deg, #6366f1 0%, #a21caf 100%);
+  color: white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  text-align: center;
+  line-height: 56px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(80, 80, 180, 0.25);
+  font-size: 2rem;
+  transition: transform 0.2s;
+}
+#chat-icon:hover {
+  transform: scale(1.08);
+}
+#chat-box {
+  opacity: 0;
+  transform: translateY(30px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+#chat-box.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+
+#chat-header {
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, #6366f1 0%, #a21caf 100%);
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+#chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #735ae2;
+  color: #e0e7ef;
+  font-size: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #23272f;
+}
+
+#chat-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-top: 1px solid #444;
+  background: #23272f;
+  color: #fff;
+  font-size: 1rem;
+  border-radius: 0 0 18px 18px;
+  outline: none;
+  transition: background 0.2s;
+}
+#chat-input:focus {
+  background: #1f2937;
+}
+
+@media (max-width: 500px) {
+  #chat-box {
+    width: 98vw;
+    height: 60vh;
+    right: 1vw;
+    left: 1vw;
+    bottom: 80px;
+    border-radius: 12px;
+  }
+  #chatbot {
+    right: 8px;
+    bottom: 8px;
+  }
+}
+
+
+
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const getIconSVG = (iconName, className) => {
+      const icons = {
+        Home: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+        Award: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 22 12 18 17 22 15.79 13.89"/></svg>`,
+        Briefcase: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/><path d="M12 12h.01"/></svg>`,
+        User: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+        Mail: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.93 1.93 0 0 1-2.06 0L2 7"/></svg>`,
+      };
+      return <span dangerouslySetInnerHTML={{ __html: icons[iconName] }} />;
+    };
+
+
+    function App() {
+      const [activeSection, setActiveSection] = React.useState('home');
+
+      const renderSection = () => {
+        switch (activeSection) {
+          case 'home':
+            return <HeroSection setActiveSection={setActiveSection} />;
+          case 'certifications':
+            return <CertificationsSection />;
+          case 'projects':
+            return <ProjectsSection />;
+          case 'about':
+            return <AboutSection />;
+          case 'contact':
+            return <ContactSection />;
+          default:
+            return <HeroSection setActiveSection={setActiveSection} />;
+        }
+      };
+
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100 font-inter">
+          {/* Navigation Bar */}
+          <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm shadow-lg p-4 md:p-6">
+            <div className="container mx-auto flex justify-between items-center">
+              <h1 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+                Tseka J Portfolio
+              </h1>
+              <div className="flex space-x-4 md:space-x-8">
+                <NavItem icon={getIconSVG('Home', 'w-5 h-5')} label="Home" section="home" activeSection={activeSection} setActiveSection={setActiveSection} />
+                <NavItem icon={getIconSVG('Award', 'w-5 h-5')} label="Certifications" section="certifications" activeSection={activeSection} setActiveSection={setActiveSection} />
+                <NavItem icon={getIconSVG('Briefcase', 'w-5 h-5')} label="Projects" section="projects" activeSection={activeSection} setActiveSection={setActiveSection} />
+                <NavItem icon={getIconSVG('User', 'w-5 h-5')} label="About" section="about" activeSection={activeSection} setActiveSection={setActiveSection} />
+                <NavItem icon={getIconSVG('Mail', 'w-5 h-5')} label="Contact" section="contact" activeSection={activeSection} setActiveSection={setActiveSection} />
+              </div>
+            </div>
+          </nav>
+
+         
+          <main className="pt-20 md:pt-24">
+            {renderSection()}
+          </main>
+
+       
+          <footer className="bg-gray-900 bg-opacity-90 backdrop-blur-sm text-center p-4 text-gray-400 text-sm mt-12">
+            <p>&copy; {new Date().getFullYear()} Developed and Managed by Tseka Junior</p>
+          </footer>
+        </div>
+      );
+    }
+
+    const responses = {
+            "hi": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            "hello": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            "h": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            "helo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            "helloo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            "good morning": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            "what's your name?": "I'm your portfolio assistant 🤖",
+            "are you working?": "Currently no, Mr Tseka is a Final Year IT Student at VUT",
+            "how can i contact you?": "Use the contact form or email me at you@example.com",
+            "what tech stack do you use?": "Mostly React, Node.js, Firebase, and Tailwind CSS.",
+            "OK": "Any more questions?",
+            "nice": "Any more questions?",
+            "bye": "Goodbye! 👋"
+          };
+
+
+    
+            window.toggleChat = function() {
+              const box = document.getElementById("chat-box");
+              if (box.classList.contains("open")) {
+                box.classList.remove("open");
+                setTimeout(() => { box.style.display = "none"; }, 250);
+              } else {
+                box.style.display = "flex";
+                setTimeout(() => { box.classList.add("open"); }, 10);
+              }
+            };
+
+            window.handleInput = function(e) {
+              if (e.key === "Enter") {
+                const input = document.getElementById("chat-input");
+                const userMsg = input.value.toLowerCase();
+                window.addMessage("You", userMsg);
+
+                const botReply = responses[userMsg] || "Sorry, I don’t understand that yet.";
+                setTimeout(() => {
+                  window.addMessage("Bot", botReply);
+                }, 500);
+
+                input.value = "";
+              }
+            };
+
+            window.addMessage = function(sender, text) {
+              const msgContainer = document.getElementById("chat-messages");
+              const msg = document.createElement("div");
+              msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+              msgContainer.appendChild(msg);
+              msgContainer.scrollTop = msgContainer.scrollHeight;
+            };
+
+
+    const NavItem = ({ icon, label, section, activeSection, setActiveSection }) => (
+      <button
+        onClick={() => setActiveSection(section)}
+        className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300
+          ${activeSection === section
+            ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+            : 'text-gray-300 hover:text-white hover:bg-gray-700'
+          } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
+      >
+        {icon}
+        <span className="hidden md:inline-block text-sm font-medium">{label}</span>
+      </button>
+    );
+
+
+function LinkedInPost({ post }) {
+  const [expanded, setExpanded] = React.useState(false);
+
+  const getHeadline = (text) => {
+    const match = text.match(/^(.+?)(\n|\r|$)/);
+    return match ? match[1] : text;
+  };
+
+  const isLong = post.text.length > getHeadline(post.text).length + 10;
+
+  return (
+    
+    <div className="bg-gray-700 rounded-lg shadow-lg border border-gray-600 text-left overflow-hidden">
+     
+      <div className="relative">
+        <div className="h-20 bg-gray-600">
+          <img 
+          src={post.coverPhoto} 
+          alt="Cover Photo" 
+          className="w-full h-20 object-cover" 
+        />
+        </div>
+
+        <a href={post.postUrl} target="_blank" rel="noopener noreferrer">
+          <img
+            src={post.profilePic}
+            alt="Profile Pic"
+            className="w-24 h-24 rounded-full border-4 border-gray-700 absolute top-8 left-4"
+          />
+        </a>
+      </div>
+
+    
+      <div className="p-4 pt-16"> 
+
+        <a href={post.postUrl} target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-gray-100 hover:text-blue-400">{post.name}</a>
+        <p className="text-sm text-gray-400 mb-4">
+          Cloud Software Development Student | Full Stack Developer | 2x CISCO Networking Certified | 2x AWS Certified | OCI Foundations Associate | {post.timeAgo}
+        </p>
+
+      
+        <p className="text-gray-300 mb-3 whitespace-pre-line">
+          {expanded ? post.text : getHeadline(post.text)}
+          {isLong && (
+            <button
+              type="button"
+              className="ml-2 text-blue-400 underline focus:outline-none"
+              onClick={(e) => {
+                e.preventDefault();
+                setExpanded(!expanded);
+              }}
+            >
+              {expanded ? "Show less" : "Show more"}
+            </button>
+          )}
+        </p>
+
+
+        {post.image && (
+          <a href={post.postUrl} target="_blank" rel="noopener noreferrer">
+            <img
+              src={post.image}
+              alt="LinkedIn Post"
+              className="w-full rounded-md mt-2 mb-3 border border-gray-600"
+            />
+          </a>
+        )}
+
+        <div className="flex justify-between items-center text-sm text-gray-400 mt-4 pt-2 border-t border-gray-600">
+          <span>👍 {post.likes} Likes</span>
+          <span>💬 {post.comments} Comments</span>
+          <span>🔄 {post.shares} Shares</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+    const HeroSection = ({ setActiveSection }) => {
+      const numberOfCertifications = 4;
+      const numberOfProjects = 4;   
+      const topSkills = ["Full Stack Development", "Java", "Cloud", "Python", "Junior DevOps"];
+
+      const linkedInPost = {
+                        postUrl: "https://www.linkedin.com/posts/junior-tseka-a20a0a20a_itstudent-cloudcomputing-devops-activity-7352724222500122626-XZT3",
+                        profilePic: "/images/pp.jpg",
+                        coverPhoto: "/images/cv.jpg",
+                        name: "Junior Tseka",
+                        timeAgo: "1 Week ago", 
+                        text: `Meet my “Wall of Achievements” 🥇
+
+                        Hello, LinkedIn family! I’m thrilled to share this awesome Wall of Achievements made by me, earned by me. This is where I paste some of the things I’ve accomplished (yes, there’s still more 😅). It’s a snapshot of my journey so far and a glimpse of what’s on the horizon.
+
+                        🧠 I hold the following certifications to prove my skill and passion for tech:
+
+                        ☁️ Cloud Practitioner in Training
+                        • Oracle Cloud Infrastructure: Foundations Associate
+                        • IBM Cloud Certified
+                        • Amazon Web Services (AWS) Quest: Cloud Practitioner Certified
+                        • FNB South Africa App Academy Finalist
+
+                        🌐 Networking Certifications
+                        • Cisco Certified Network Associate (CCNA)
+                        • Cisco Networking Academy: Switching, Routing and Wireless Essentials (SRWE)
+
+                        I MAY NOT HAVE DECADES OF EXPERIENCE YET, BUT I BRING CREATIVITY, DEDICATION AND A RELENTLESS DRIVE to be the best in everything I do. Powered by faith, hard work and a hunger for growth, I believe there’s always more to learn and achieve.
+
+                        🎓 Final-Year IT Software Development Student – VUT  
+                        ♟️ Chairperson – VUT Chess Club  
+                        📸 CEO – Jay Snaps Photography  
+                        💻 Dev Projects: Betting Platform, Digital Clinic, Firebase Dashboard
+
+                        To my future partners, employers, and collaborators:  
+                        Let’s connect and build something remarkable together. 🚀
+
+                        “Commit your work to the Lord, and your plans will be established.” – Proverbs 16:3`,
+                        image: "/images/post.png",
+                        likes: 2019,
+                        comments: 109,
+                        shares: 5
+                        };
+
+
+      return (
+        <section className="relative h-auto min-h-[calc(100vh-80px)] md:min-h-[calc(100vh-96px)] flex flex-col items-center justify-center text-center p-4 overflow-hidden">
+          <div className="absolute inset-0 z-0 opacity-20">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+            <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+          </div>
+
+          <div className="relative z-10 max-w-5xl mx-auto bg-gray-800 bg-opacity-70 backdrop-blur-md p-8 md:p-12 rounded-xl shadow-2xl border border-gray-700">
+            <h2 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-400 to-purple-500 animate-fade-in-up">
+              Hi, I'm <span className="block md:inline">Tseka Junior</span>
+            </h2>
+            <p className="text-lg md:text-2xl text-gray-300 mb-8 animate-fade-in-up animation-delay-500">
+              A passionate <span className="font-semibold text-blue-300">Cloud Software Developer</span> focused on building impactful and scalable solutions.
+            </p>
+    
+<div className="mb-10 animate-fade-in-up animation-delay-1000">
+  <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+    Top Skills
+  </h2>
+  <div className="flex flex-wrap justify-center gap-4 text-gray-300 text-lg">
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">OCI (CI/CD)</span>
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">Node.js</span>
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">REACT</span>
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">Kubernetes</span>
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">Docker</span>
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">Python</span>
+    <span className="bg-gray-800 px-4 py-2 rounded-full transition duration-300 ease-in-out hover:scale-105 hover:-translate-y-1 hover:shadow-xl skill-hover">Java</span>
+  </div>
+</div>
+
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10 animate-fade-in-up animation-delay-1500">
+              <div className="bg-gray-700 p-6 rounded-lg shadow-lg border border-gray-600">
+                <h3 className="text-3xl font-bold text-blue-300">{numberOfCertifications}+</h3>
+                <p className="text-gray-300 text-lg">Certifications</p>
+              </div>
+              <div className="bg-gray-700 p-6 rounded-lg shadow-lg border border-gray-600">
+                <h3 className="text-3xl font-bold text-purple-300">{numberOfProjects}+</h3>
+                <p className="text-gray-300 text-lg">Projects Completed</p>
+              </div>
+            </div>
+
+            <div className="mb-10 animate-fade-in-up animation-delay-2000">
+              <h3 className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-teal-400 mb-4">
+                Latest LinkedIn Buzz
+              </h3>
+
+              
+            <LinkedInPost post={linkedInPost} />
+
+
+              <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                  width: 8px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                  background: #4a5568; /* gray-700 */
+                  border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                  background: #a0aec0; /* gray-400 */
+                  border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                  background: #cbd5e0; /* gray-300 */
+                }
+              `}</style>
+            </div>
+
+
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up animation-delay-2500">
+              <button
+                onClick={() => setActiveSection('projects')}
+                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+              >
+                View My Projects
+              </button>
+              <button
+                onClick={() => setActiveSection('contact')}
+                className="px-8 py-3 bg-gray-700 text-gray-200 font-semibold rounded-full shadow-lg hover:bg-gray-600 hover:text-white transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75"
+              >
+                Get In Touch
+              </button>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const CertificationsSection = () => {
+      const certifications = [
+        {
+          id: 1,
+          title: "AWS Cloud Quest Cloud Practitioner",
+          issuer: "Amazon Web Services",
+          date: "June 2025",
+          description: "Demonstrates proficiency in developing, deploying, and debugging cloud-based applications using AWS services.",
+          badge: "/images/aws.png",
+          downloadUrl: "/docs/AWS.pdf"
+        },
+        {
+          id: 2,
+          title: "FNB Academy FullStack Certificate",
+          issuer: "IT Varsity",
+          date: "July 2025",
+          description: "Validates the ability to install, configure, and manage Kubernetes clusters.",
+          badge: "/images/fnb.png",
+          downloadUrl: "/docs/FullStack.pdf"
+        },
+        {
+          id: 3,
+          title: "OCI Foundations - Associate",
+          issuer: "Oracle Cloud",
+          date: "July 2025",
+          description: "Confirms understanding of the Scrum framework and its application.",
+          badge: "/images/oracle.png",
+          downloadUrl: "/docs/AWS.pdf"
+        },
+
+        {
+          id: 4,
+          title: "OCI Artificial Intelligence Foundations - Associate",
+          issuer: "Oracle Cloud",
+          date: "August 2025",
+          description: "It validates foundational understanding of AI concepts and the ability to apply Oracle Cloud Infrastructure's AI services to solve business problems.",
+          badge: "/images/oracle.png",
+          downloadUrl: "/docs/AWS.pdf"
+        },
+
+        {
+          id: 5,
+          title: "IBM Cloud Fundamentals",
+          issuer: "IBM",
+          date: "May 2025",
+          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
+          badge: "/images/ibm.png",
+          downloadUrl: "/docs/IBM.pdf" 
+        },
+        {
+          id: 6,
+          title: "CCNA: Introduction To Networks",
+          issuer: "Cisco Networking Academy",
+          date: "November 2024",
+          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
+          badge: "/images/cisco.png",
+          downloadUrl: "/docs/CCNA.pdf" 
+        },
+        {
+          id: 7,
+          title: "AWS Educate: Introduction to Cloud 101",
+          issuer: "Amazon Web Services",
+          date: "June 2025",
+          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
+          badge: "/images/awsedu.png",
+          downloadUrl: "/docs/AWS.pdf" 
+        },
+        {
+          id: 8,
+          title: "Cisco IT Essentials",
+          issuer: "Cisco Networking Academy",
+          date: "June 2022",
+          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
+          badge: "/images/cisco.png",
+          downloadUrl: "/docs/Cisco.pdf" 
+        }
+
+      ];
+
+      return (
+        <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)]">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500">
+            My Certifications
+          </h2>
+          <div className="flex flex-col items-center space-y-8"> 
+            {certifications.map((cert, index) => (
+              <React.Fragment key={cert.id}>
+                <div className="bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700 hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center max-w-2xl w-full"> {/* Added max-w-2xl and w-full */}
+                  <img src={cert.badge} alt={`${cert.title} Badge`} className="w-24 h-24 mb-4 rounded-full object-cover border-2 border-blue-400 p-1" />
+                  <h3 className="text-2xl font-semibold mb-2 text-blue-400">{cert.title}</h3>
+                  <p className="text-gray-400 mb-3">Issued by: {cert.issuer}</p>
+                  <p className="text-gray-500 text-sm">Date: {cert.date}</p>
+                  <p className="mt-4 text-gray-300 flex-grow">
+                    {cert.description}
+                  </p>
+                  <a href={cert.downloadUrl} download={`${cert.title.replace(/\s/g, '_')}.pdf`} className="mt-6 px-6 py-2 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300">
+                    Download Certificate
+                  </a>
+                </div>
+                {index < certifications.length - 1 && (
+    
+                  <div className="w-px h-16 bg-gray-600 my-4"></div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </section>
+      );
+    };
+
+
+
+    const ProjectsSection = () => {
+      const projects = [
+        {
+          id: 1,
+          title: "E-commerce Platform Backend",
+          description: "A robust backend for an e-commerce platform, handling user authentication, product management, order processing, and payment integration. Built with a microservices architecture.",
+          technologies: ["Node.js", "Express", "MongoDB", "Kafka", "Docker", "Kubernetes"],
+          image: "https://placehold.co/400x250/336699/ffffff?text=E-commerce+Backend",
+          liveDemoUrl: "https://demo.example.com/ecommerce", 
+          githubRepoUrl: "https://github.com/yourusername/ecommerce-backend" 
+        },
+        {
+          id: 2,
+          title: "Real-time Chat Application",
+          description: "A real-time chat application featuring user authentication, private messaging, and group chats. Utilizes WebSockets for instant message delivery and a scalable backend.",
+          technologies: ["React", "Socket.IO", "Node.js", "PostgreSQL"],
+          image: "https://placehold.co/400x250/663399/ffffff?text=Chat+App",
+          liveDemoUrl: "https://demo.example.com/chat",
+          githubRepoUrl: "https://github.com/yourusername/realtime-chat-app" 
+        },
+        {
+          id: 3,
+          title: "Machine Learning Model Deployment",
+          description: "Demonstration of deploying a pre-trained machine learning model (e.g., image classification) as a RESTful API endpoint using Flask and Docker, with CI/CD pipeline integration.",
+          technologies: ["Python", "Flask", "TensorFlow", "Docker", "Jenkins"],
+          image: "https://placehold.co/400x250/993366/ffffff?text=ML+Deployment",
+          liveDemoUrl: "https://demo.example.com/ml-api", 
+          githubRepoUrl: "https://github.com/yourusername/ml-model-deployment" 
+        },
+        {
+          id: 4,
+          title: "Personal Portfolio Website",
+          description: "The very website you are currently viewing! Built with React and Tailwind CSS, demonstrating modern web development practices and responsive design.",
+          technologies: ["React", "Tailwind CSS", "HTML", "JavaScript"],
+          image: "https://placehold.co/400x250/339966/ffffff?text=Portfolio+Site",
+          liveDemoUrl: "#", 
+          githubRepoUrl: "https://github.com/yourusername/your-portfolio"
+        }
+      ];
+
+      return (
+        <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)]">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-500">
+            My Projects
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map(project => (
+              <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700 hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col">
+                <img src={project.image} alt={`${project.title} Thumbnail`} className="w-full h-48 object-cover rounded-md mb-4 border border-gray-700" />
+                <h3 className="text-2xl font-semibold mb-2 text-pink-400">{project.title}</h3>
+                <p className="text-gray-300 mb-4 flex-grow">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4 mt-auto">
+                  <a
+                    href={project.liveDemoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 text-center"
+                  >
+                    View Live Demo
+                  </a>
+                  <a
+                    href={project.githubRepoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-2 bg-gray-700 text-gray-200 font-semibold rounded-full hover:bg-gray-600 hover:text-white transition-colors duration-300 text-center"
+                  >
+                    View on GitHub
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    };
+
+    const AboutSection = () => (
+      <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)] flex flex-col items-center justify-center">
+  <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
+    About Me
+  </h2>
+  <div className="text-lg md:text-xl text-gray-300 text-center max-w-3xl space-y-6">
+    <p>
+      I’m <strong>Junior Tseka</strong>, an aspiring cloud and full-stack developer currently completing my Diploma in Information Technology at Vaal University of Technology (2025).
+    </p>
+    <p>
+      I specialize in building real-world solutions using modern stacks like <strong>React, Node.js, Firebase</strong> and <strong>Oracle Cloud Infrastructure</strong>. My interests also include <strong>DevOps practices</strong> and <strong>CI/CD automation</strong> with GitHub Actions.
+    </p>
+    <p>
+      I bring hands-on experience from leading and contributing to projects that aim to make real impact, especially in education and healthcare spaces. I’m always eager to learn, improve, and deliver value through clean, scalable code.
+    </p>
+    <p className="italic text-blue-400 font-semibold">
+      “I may not have decades of experience, but I bring CREATIVITY, DEDICATION, HARD WORK and a RELENTLESS DRIVE.”
+    </p>
+  </div>
+  <div className="mt-8 text-gray-500 text-lg">
+    <p>Feel free to explore my projects and certifications!</p>
+  </div>
+</section>
+    )
+
+    const ContactSection = () => (
+      <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)] flex flex-col items-center justify-center">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
+          Contact Me
+        </h2>
+        <p className="text-xl text-gray-300 text-center max-w-2xl mb-8">
+          I'm always open to new opportunities and collaborations. Feel free to reach out!
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 w-full max-w-lg">
+          <a
+            href="https://www.linkedin.com/in/junior-tseka-a20a0a20a/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center px-8 py-3 bg-blue-700 text-white font-semibold rounded-full shadow-lg hover:bg-blue-800 transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            Visit LinkedIn Page
+          </a>
+          <a
+            href="mailto:TsekaJnr@outlook.com"
+            className="flex items-center justify-center px-8 py-3 bg-gray-700 text-gray-200 font-semibold rounded-full shadow-lg hover:bg-gray-600 hover:text-white transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.93 1.93 0 0 1-2.06 0L2 7"/></svg>
+            Send Email
+          </a>
+        </div>
+      </section>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+    // Add this after all component definitions
+document.addEventListener('DOMContentLoaded', () => {
+  // Chatbot event bindings
+  document.getElementById('chat-icon').addEventListener('click', window.toggleChat);
+  document.getElementById('chat-close').addEventListener('click', window.toggleChat);
+  document.getElementById('chat-input').addEventListener('keydown', window.handleInput);
+  
+  // Initialize with welcome message
+  setTimeout(() => {
+    window.addMessage("Bot", "Hello! I'm Tseka's assistant. Ask me anything about his portfolio!");
+  }, 1000);
+});
+  </script>
+
+  <div id="chatbot">
+  <div id="chat-icon">💬</div>
+  <div id="chat-box">
+    <div id="chat-header">Ask Me Anything</div>
+    <div style="position:absolute;top:10px;right:14px;cursor:pointer;color:#fff;font-size:1.2rem;" onclick="toggleChat()" title="Close">&times;</div>
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Type a message...">
+  </div>
+</div>
+
+
+</body>
+</html>
