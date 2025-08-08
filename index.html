@@ -364,7 +364,7 @@ function LinkedInPost({ post }) {
 
 
     const HeroSection = ({ setActiveSection }) => {
-      const numberOfCertifications = 4;
+      const numberOfCertifications = 8;
       const numberOfProjects = 4;   
       const topSkills = ["Full Stack Development", "Java", "Cloud", "Python", "Junior DevOps"];
 
@@ -373,7 +373,7 @@ function LinkedInPost({ post }) {
                         profilePic: "images/pp.jpg",
                         coverPhoto: "images/cv.jpg",
                         name: "Junior Tseka",
-                        timeAgo: "1 Week ago", 
+                        timeAgo: "2 Weeks ago", 
                         text: `Meet my “Wall of Achievements” 🥇
 
                         Hello, LinkedIn family! I’m thrilled to share this awesome Wall of Achievements made by me, earned by me. This is where I paste some of the things I’ve accomplished (yes, there’s still more 😅). It’s a snapshot of my journey so far and a glimpse of what’s on the horizon.
@@ -614,12 +614,12 @@ function LinkedInPost({ post }) {
       const projects = [
         {
           id: 1,
-          title: "E-commerce Platform Backend",
-          description: "A robust backend for an e-commerce platform, handling user authentication, product management, order processing, and payment integration. Built with a microservices architecture.",
-          technologies: ["Node.js", "Express", "MongoDB", "Kafka", "Docker", "Kubernetes"],
-          image: "https://placehold.co/400x250/336699/ffffff?text=E-commerce+Backend",
-          liveDemoUrl: "https://demo.example.com/ecommerce", 
-          githubRepoUrl: "https://github.com/yourusername/ecommerce-backend" 
+          title: "VUT Chess Club Management System",
+          description: "The VUT Chess Club Management System is a web-based platform designed to streamline and modernize the operations of the Vaal University of Technology Chess Club. It provides an all-in-one solution for managing player profiles, event scheduling, training check-ins, leaderboards and club communications. With dedicated dashboards for both administrators and players, the system enables admins to easily manage memberships, update event calendars, track performance, and oversee club activities, while players can access personalized features such as training logs puzzles, and suggestion submissions. Built with a clean, user-friendly interface and integrated with Firebase for secure data storage, the system enhances efficiency, fosters engagement and creates a centralized digital hub for all chess-related activities within the club.",
+          technologies: ["Node.js", "Firebase Cloud", "Tailwind CSS", "HTML, CSS, JavaScript" ],
+          image: "images/vut.png",
+          liveDemoUrl: "https://vutchess-b7082.web.app/", 
+          githubRepoUrl: "https://github.com/TsekaJnr/VUT-Chess-Management-System" 
         },
         {
           id: 2,
@@ -632,21 +632,12 @@ function LinkedInPost({ post }) {
         },
         {
           id: 3,
-          title: "Machine Learning Model Deployment",
-          description: "Demonstration of deploying a pre-trained machine learning model (e.g., image classification) as a RESTful API endpoint using Flask and Docker, with CI/CD pipeline integration.",
-          technologies: ["Python", "Flask", "TensorFlow", "Docker", "Jenkins"],
-          image: "https://placehold.co/400x250/993366/ffffff?text=ML+Deployment",
-          liveDemoUrl: "https://demo.example.com/ml-api", 
-          githubRepoUrl: "https://github.com/yourusername/ml-model-deployment" 
-        },
-        {
-          id: 4,
           title: "Personal Portfolio Website",
           description: "The very website you are currently viewing! Built with React and Tailwind CSS, demonstrating modern web development practices and responsive design.",
           technologies: ["React", "Tailwind CSS", "HTML", "JavaScript"],
           image: "https://placehold.co/400x250/339966/ffffff?text=Portfolio+Site",
           liveDemoUrl: "#", 
-          githubRepoUrl: "https://github.com/yourusername/your-portfolio"
+          githubRepoUrl: "https://github.com/TsekaJnr/TsekaJrPortfolio.github.io"
         }
       ];
 
@@ -749,14 +740,10 @@ function LinkedInPost({ post }) {
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 
-    // Add this after all component definitions
 document.addEventListener('DOMContentLoaded', () => {
-  // Chatbot event bindings
   document.getElementById('chat-icon').addEventListener('click', window.toggleChat);
   document.getElementById('chat-close').addEventListener('click', window.toggleChat);
   document.getElementById('chat-input').addEventListener('keydown', window.handleInput);
-  
-  // Initialize with welcome message
   setTimeout(() => {
     window.addMessage("Bot", "Hello! I'm Tseka's assistant. Ask me anything about his portfolio!");
   }, 1000);
@@ -777,4 +764,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
