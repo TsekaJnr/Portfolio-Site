@@ -52,98 +52,6 @@
     .animation-delay-2000 { animation-delay: 2s; }
     .animation-delay-4000 { animation-delay: 4s; }
 
- #chatbot {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 1000;
-  font-family: 'Inter', sans-serif;
-}
-
-#chat-icon {
-  background: linear-gradient(135deg, #6366f1 0%, #a21caf 100%);
-  color: white;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  text-align: center;
-  line-height: 56px;
-  cursor: pointer;
-  box-shadow: 0 4px 24px rgba(80, 80, 180, 0.25);
-  font-size: 2rem;
-  transition: transform 0.2s;
-}
-#chat-icon:hover {
-  transform: scale(1.08);
-}
-#chat-box {
-  opacity: 0;
-  transform: translateY(30px) scale(0.98);
-  pointer-events: none;
-  transition: opacity 0.25s, transform 0.25s;
-}
-
-#chat-box.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-
-#chat-header {
-  font-weight: 700;
-  font-size: 1.1rem;
-  background: linear-gradient(90deg, #6366f1 0%, #a21caf 100%);
-  color: #fff;
-  padding: 16px;
-  text-align: center;
-  letter-spacing: 0.5px;
-}
-
-#chat-messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 16px;
-  background: #735ae2;
-  color: #e0e7ef;
-  font-size: 15px;
-  scrollbar-width: thin;
-  scrollbar-color: #6366f1 #23272f;
-}
-
-#chat-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: none;
-  border-top: 1px solid #444;
-  background: #23272f;
-  color: #fff;
-  font-size: 1rem;
-  border-radius: 0 0 18px 18px;
-  outline: none;
-  transition: background 0.2s;
-}
-#chat-input:focus {
-  background: #1f2937;
-}
-
-@media (max-width: 500px) {
-  #chat-box {
-    width: 98vw;
-    height: 60vh;
-    right: 1vw;
-    left: 1vw;
-    bottom: 80px;
-    border-radius: 12px;
-  }
-  #chatbot {
-    right: 8px;
-    bottom: 8px;
-  }
-}
-
-
-
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
@@ -214,57 +122,21 @@
       );
     }
 
-    const responses = {
-            "hi": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            "hello": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            "h": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            "helo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            "helloo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            "good morning": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            "what's your name?": "I'm your portfolio assistant 🤖",
-            "are you working?": "Currently no, Mr Tseka is a Final Year IT Student at VUT",
-            "how can i contact you?": "Use the contact form or email me at you@example.com",
-            "what tech stack do you use?": "Mostly React, Node.js, Firebase, and Tailwind CSS.",
-            "OK": "Any more questions?",
-            "nice": "Any more questions?",
-            "bye": "Goodbye! 👋"
-          };
-
-
-    
-            window.toggleChat = function() {
-              const box = document.getElementById("chat-box");
-              if (box.classList.contains("open")) {
-                box.classList.remove("open");
-                setTimeout(() => { box.style.display = "none"; }, 250);
-              } else {
-                box.style.display = "flex";
-                setTimeout(() => { box.classList.add("open"); }, 10);
-              }
-            };
-
-            window.handleInput = function(e) {
-              if (e.key === "Enter") {
-                const input = document.getElementById("chat-input");
-                const userMsg = input.value.toLowerCase();
-                window.addMessage("You", userMsg);
-
-                const botReply = responses[userMsg] || "Sorry, I don’t understand that yet.";
-                setTimeout(() => {
-                  window.addMessage("Bot", botReply);
-                }, 500);
-
-                input.value = "";
-              }
-            };
-
-            window.addMessage = function(sender, text) {
-              const msgContainer = document.getElementById("chat-messages");
-              const msg = document.createElement("div");
-              msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
-              msgContainer.appendChild(msg);
-              msgContainer.scrollTop = msgContainer.scrollHeight;
-            };
+    //const responses = {
+            //"hi": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"hello": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"h": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"helo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"helloo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+           // "good morning": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+           // "what's your name?": "I'm your portfolio assistant 🤖",
+    //"are you working?": "Currently no, Mr Tseka is a Final Year IT Student at VUT",
+            //"how can i contact you?": "Use the contact form or email me at you@example.com",
+           // "what tech stack do you use?": "Mostly React, Node.js, Firebase, and Tailwind CSS.",
+           // "OK": "Any more questions?",
+           // "nice": "Any more questions?",
+           // "bye": "Goodbye! 👋"
+        //  };
 
 
     const NavItem = ({ icon, label, section, activeSection, setActiveSection }) => (
@@ -691,13 +563,13 @@ function LinkedInPost({ post }) {
   </h2>
   <div className="text-lg md:text-xl text-gray-300 text-center max-w-3xl space-y-6">
     <p>
-      I’m <strong>Junior Tseka</strong>, an aspiring cloud and full-stack developer currently completing my Diploma in Information Technology at Vaal University of Technology (2025).
+      I’m <strong>Junior Tseka</strong>, a Cloud and Full-stack developer currently completing my Diploma in Information Technology at Vaal University of Technology (2025).
     </p>
     <p>
       I specialize in building real-world solutions using modern stacks like <strong>React, Node.js, Firebase</strong> and <strong>Oracle Cloud Infrastructure</strong>. My interests also include <strong>DevOps practices</strong> and <strong>CI/CD automation</strong> with GitHub Actions.
     </p>
     <p>
-      I bring hands-on experience from leading and contributing to projects that aim to make real impact, especially in education and healthcare spaces. I’m always eager to learn, improve, and deliver value through clean, scalable code.
+      I bring hands-on experience from leading and contributing to projects that aim to make real impact, especially in education and healthcare spaces. I’m always eager to learn, improve and deliver value through clean, scalable code.
     </p>
     <p className="italic text-blue-400 font-semibold">
       “I may not have decades of experience, but I bring CREATIVITY, DEDICATION, HARD WORK and a RELENTLESS DRIVE.”
@@ -707,7 +579,6 @@ function LinkedInPost({ post }) {
     <p>Feel free to explore my projects and certifications!</p>
   </div>
 </section>
-    )
 
     const ContactSection = () => (
       <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)] flex flex-col items-center justify-center">
@@ -740,30 +611,11 @@ function LinkedInPost({ post }) {
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('chat-icon').addEventListener('click', window.toggleChat);
-  document.getElementById('chat-close').addEventListener('click', window.toggleChat);
-  document.getElementById('chat-input').addEventListener('keydown', window.handleInput);
-  setTimeout(() => {
-    window.addMessage("Bot", "Hello! I'm Tseka's assistant. Ask me anything about his portfolio!");
-  }, 1000);
-});
   </script>
 
-  <div id="chatbot">
-  <div id="chat-icon">💬</div>
-  <div id="chat-box">
-    <div id="chat-header">Ask Me Anything</div>
-    <div style="position:absolute;top:10px;right:14px;cursor:pointer;color:#fff;font-size:1.2rem;" onclick="toggleChat()" title="Close">&times;</div>
-    <div id="chat-messages"></div>
-    <input type="text" id="chat-input" placeholder="Type a message...">
-  </div>
-</div>
-
-
 </body>
-
 </html>
+
 
 
 
