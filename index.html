@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tseka Junior Portfolio</title>
-  <link rel="icon" href="/images/logo.png" type="image/x-icon">
+  <link rel="icon" href="images/logo.png" type="image/x-icon">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -122,22 +122,22 @@
       );
     }
 
-    //const responses = { 
+    //const responses = {
             //"hi": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-           // "hello": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-           // "h": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-           // "helo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-           // "helloo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"hello": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"h": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"helo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
+            //"helloo": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
            // "good morning": "Hello, i'm Mr Tseka's Assistant chatbot! 👋",
-            //"what's your name?": "I'm your portfolio assistant 🤖",
-           // "are you working?": "Currently no, Mr Tseka is a Final Year IT Student at VUT",
-           // "how can i contact you?": "Use the contact form or email me at you@example.com",
+           // "what's your name?": "I'm your portfolio assistant 🤖",
+    //"are you working?": "Currently no, Mr Tseka is a Final Year IT Student at VUT",
+            //"how can i contact you?": "Use the contact form or email me at you@example.com",
            // "what tech stack do you use?": "Mostly React, Node.js, Firebase, and Tailwind CSS.",
-          //  "OK": "Any more questions?",
-          //  "nice": "Any more questions?",
+           // "OK": "Any more questions?",
+           // "nice": "Any more questions?",
            // "bye": "Goodbye! 👋"
-         // };
-    
+        //  };
+
 
     const NavItem = ({ icon, label, section, activeSection, setActiveSection }) => (
       <button
@@ -236,16 +236,16 @@ function LinkedInPost({ post }) {
 
 
     const HeroSection = ({ setActiveSection }) => {
-      const numberOfCertifications = 9;
+      const numberOfCertifications = 8;
       const numberOfProjects = 4;   
       const topSkills = ["Full Stack Development", "Java", "Cloud", "Python", "Junior DevOps"];
 
       const linkedInPost = {
                         postUrl: "https://www.linkedin.com/posts/junior-tseka-a20a0a20a_itstudent-cloudcomputing-devops-activity-7352724222500122626-XZT3",
-                        profilePic: "/images/pp.jpg",
-                        coverPhoto: "/images/cv.jpg",
+                        profilePic: "images/pp.jpg",
+                        coverPhoto: "images/cv.jpg",
                         name: "Junior Tseka",
-                        timeAgo: "1 Week ago", 
+                        timeAgo: "2 Weeks ago", 
                         text: `Meet my “Wall of Achievements” 🥇
 
                         Hello, LinkedIn family! I’m thrilled to share this awesome Wall of Achievements made by me, earned by me. This is where I paste some of the things I’ve accomplished (yes, there’s still more 😅). It’s a snapshot of my journey so far and a glimpse of what’s on the horizon.
@@ -273,9 +273,9 @@ function LinkedInPost({ post }) {
                         Let’s connect and build something remarkable together. 🚀
 
                         “Commit your work to the Lord, and your plans will be established.” – Proverbs 16:3`,
-                        image: "/images/post.png",
-                        likes: 2098,
-                        comments: 111,
+                        image: "images/post.png",
+                        likes: 2019,
+                        comments: 109,
                         shares: 5
                         };
 
@@ -372,88 +372,78 @@ function LinkedInPost({ post }) {
 
     const CertificationsSection = () => {
       const certifications = [
-
         {
           id: 1,
-          title: "OCI Certified Developer - Profesional 2025",
-          issuer: "Oracle Cloud",
-          date: "August 2025",
-          description: "Certifies my mastery of the entire cloud native lifecycle on OCI from developing and deploying scalable, secure serverless applications to expertly testing, monitoring and troubleshooting them.",
-          badge: "/images/oracleDev.png",
-          downloadUrl: "/docs/Dev.pdf"
-        },
-        {
-          id: 2,
           title: "AWS Cloud Quest Cloud Practitioner",
           issuer: "Amazon Web Services",
           date: "June 2025",
-          description: "Demonstrates proficiency in developing, deploying, and debugging cloud-based applications using AWS services.",
-          badge: "/images/aws.png",
+          description: "Demonstrates the ability to understand and apply AWS cloud concepts, core services, security and basic architectural principles through interactive, scenario-based challenges.",
+          badge: "images/aws.png",
           downloadUrl: "/docs/AWS.pdf"
         },
         {
-          id: 3,
+          id: 2,
           title: "FNB Academy FullStack Certificate",
           issuer: "IT Varsity",
           date: "July 2025",
-          description: "Validates the ability to install, configure, and manage Kubernetes clusters.",
-          badge: "/images/fnb.png",
+          description: "Demonstrates proficiency in developing end-to-end web applications, integrating front-end interfaces with secure and scalable back-end systems.",
+          badge: "images/fnb.png",
           downloadUrl: "/docs/FullStack.pdf"
         },
         {
-          id: 4,
+          id: 3,
           title: "OCI Foundations - Associate",
           issuer: "Oracle Cloud",
           date: "July 2025",
-          description: "Confirms understanding of the Scrum framework and its application.",
-          badge: "/images/oracle.png",
-          downloadUrl: "/docs/ociFoundations.pdf"
+          description: "Validates knowledge of Oracle Cloud Infrastructure fundamentals, including computing, storage, networking, and cloud security best practices.",
+          badge: "images/oracle.png",
+          downloadUrl: "/docs/AWS.pdf"
+        },
+
+        {
+          id: 4,
+          title: "OCI Artificial Intelligence Foundations - Associate",
+          issuer: "Oracle Cloud",
+          date: "August 2025",
+          description: "Demonstrates the capability to leverage Oracle Cloud AI services for machine learning, natural language processing and data-driven solutions.",
+          badge: "images/oracle.png",
+          downloadUrl: "/docs/AWS.pdf"
         },
 
         {
           id: 5,
-          title: "OCI Artificial Intelligence Foundations - Associate",
-          issuer: "Oracle Cloud",
-          date: "August 2025",
-          description: "It validates foundational understanding of AI concepts and the ability to apply Oracle Cloud Infrastructure's AI services to solve business problems.",
-          badge: "/images/oracle.png",
-          downloadUrl: "/docs/Ai.pdf"
-        },
-
-        {
-          id: 6,
           title: "IBM Cloud Fundamentals",
           issuer: "IBM",
           date: "May 2025",
-          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
-          badge: "/images/ibm.png",
+          description: "Certifies understanding of IBM Cloud service models, deployment strategies, and cloud-native application development.",
+          badge: "images/ibm.png",
           downloadUrl: "/docs/IBM.pdf" 
         },
         {
-          id: 7,
+          id: 6,
           title: "CCNA: Introduction To Networks",
           issuer: "Cisco Networking Academy",
           date: "November 2024",
-          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
-          badge: "/images/cisco.png",
+          description: "Demonstrates foundational networking skills in configuring, managing and troubleshooting Cisco-based network environments.",
+          badge: "images/cisco.png",
           downloadUrl: "/docs/CCNA.pdf" 
         },
         {
-          id: 8,
+          id: 7,
           title: "AWS Educate: Introduction to Cloud 101",
           issuer: "Amazon Web Services",
           date: "June 2025",
-          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
-          badge: "/images/awsedu.png",
+          description: "Validates understanding of core cloud computing principles, AWS service offerings and their real-world applications.",
+          badge: "images/awsedu.png",
           downloadUrl: "/docs/AWS.pdf" 
         },
         {
-          id: 9,
+          id: 8,
           title: "Cisco IT Essentials",
           issuer: "Cisco Networking Academy",
           date: "June 2022",
-          description: "Demonstrates expertise in designing, building, testing, and maintaining cloud applications on Microsoft Azure.",
-          badge: "/images/cisco.png",
+          description: "Demonstrates competence in PC hardware assembly, operating system installation, troubleshooting and basic networking support.",
+          badge: "images/cisco.png",
           downloadUrl: "/docs/Cisco.pdf" 
         }
 
@@ -496,31 +486,30 @@ function LinkedInPost({ post }) {
       const projects = [
         {
           id: 1,
-          title: "E-commerce Platform Backend",
-          description: "A robust backend for an e-commerce platform, handling user authentication, product management, order processing, and payment integration. Built with a microservices architecture.",
-          technologies: ["Node.js", "Express", "MongoDB", "Kafka", "Docker", "Kubernetes"],
-          image: "https://placehold.co/400x250/336699/ffffff?text=E-commerce+Backend",
-          liveDemoUrl: "https://demo.example.com/ecommerce", 
-          githubRepoUrl: "https://github.com/yourusername/ecommerce-backend" 
+          title: "VUT Chess Club Management System",
+          description: "A web-based platform for managing the VUT Chess Club. Features include player profiles, event scheduling, leaderboards, training check-ins, puzzles and suggestions. Admins manage members, events and performance, while players access personalized tools. Built with Firebase for secure data storage.",
+          technologies: ["Node.js", "Firebase Cloud", "Tailwind CSS", "HTML, CSS, JavaScript" ],
+          image: "images/vut.png",
+          liveDemoUrl: "https://vutchess-b7082.web.app/", 
+          githubRepoUrl: "https://github.com/TsekaJnr/VUT-Chess-Management-System" 
         },
         {
           id: 2,
-          title: "Real-time Chat Application",
-          description: "A real-time chat application featuring user authentication, private messaging, and group chats. Utilizes WebSockets for instant message delivery and a scalable backend.",
-          technologies: ["React", "Socket.IO", "Node.js", "PostgreSQL"],
-          image: "https://placehold.co/400x250/663399/ffffff?text=Chat+App",
-          liveDemoUrl: "https://demo.example.com/chat",
-          githubRepoUrl: "https://github.com/yourusername/realtime-chat-app" 
+          title: "Medical Cloud Migration Application",
+          description: "Designed and developed a cloud-based healthcare platform to digitize patient data and streamline clinic workflows. Leveraged AWS/Microsoft Azure for secure, scalable storage and implemented role-based access for staff. Focused on usability, efficiency and real-world healthcare impact.",
+          technologies: ["GCP(Google Cloud)", "React", "Python", "Node.js", "Face Recognition"],
+          image: "images/medical.png",
+          liveDemoUrl: "https://tsekajnr.github.io/Cloud-MedSite-Test1/",
+          githubRepoUrl: "https://github.com/TsekaJnr/Medical-Cloud-Migration-App" 
         },
-
         {
           id: 3,
           title: "Personal Portfolio Website",
           description: "The very website you are currently viewing! Built with React and Tailwind CSS, demonstrating modern web development practices and responsive design.",
           technologies: ["React", "Tailwind CSS", "HTML", "JavaScript"],
-          image: "https://placehold.co/400x250/339966/ffffff?text=Portfolio+Site",
+          image: "images/port.png",
           liveDemoUrl: "#", 
-          githubRepoUrl: "https://github.com/yourusername/your-portfolio"
+          githubRepoUrl: "https://github.com/TsekaJnr/TsekaJrPortfolio.github.io"
         }
       ];
 
@@ -590,8 +579,7 @@ function LinkedInPost({ post }) {
     <p>Feel free to explore my projects and certifications!</p>
   </div>
 </section>
-    )
-
+)
     const ContactSection = () => (
       <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)] flex flex-col items-center justify-center">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
@@ -621,13 +609,19 @@ function LinkedInPost({ post }) {
       </section>
     );
 
-  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 
   </script>
 
-</div>
-
-
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
