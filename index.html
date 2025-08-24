@@ -136,7 +136,7 @@
            // "OK": "Any more questions?",
            // "nice": "Any more questions?",
            // "bye": "Goodbye! 👋"
-        //  };
+        // This Chatbot is not ready, DO NOT TOUCH };
 
 
     const NavItem = ({ icon, label, section, activeSection, setActiveSection }) => (
@@ -236,7 +236,7 @@ function LinkedInPost({ post }) {
 
 
     const HeroSection = ({ setActiveSection }) => {
-      const numberOfCertifications = 8;
+      const numberOfCertifications = 9;
       const numberOfProjects = 4;   
       const topSkills = ["Full Stack Development", "Java", "Cloud", "Python", "Junior DevOps"];
 
@@ -245,7 +245,7 @@ function LinkedInPost({ post }) {
                         profilePic: "images/pp.jpg",
                         coverPhoto: "images/cv.jpg",
                         name: "Junior Tseka",
-                        timeAgo: "2 Weeks ago", 
+                        timeAgo: "3 Weeks ago", 
                         text: `Meet my “Wall of Achievements” 🥇
 
                         Hello, LinkedIn family! I’m thrilled to share this awesome Wall of Achievements made by me, earned by me. This is where I paste some of the things I’ve accomplished (yes, there’s still more 😅). It’s a snapshot of my journey so far and a glimpse of what’s on the horizon.
@@ -274,9 +274,9 @@ function LinkedInPost({ post }) {
 
                         “Commit your work to the Lord, and your plans will be established.” – Proverbs 16:3`,
                         image: "images/post.png",
-                        likes: 2019,
-                        comments: 109,
-                        shares: 5
+                        likes: 2098,
+                        comments: 111,
+                        reposts: 5
                         };
 
 
@@ -372,8 +372,18 @@ function LinkedInPost({ post }) {
 
     const CertificationsSection = () => {
       const certifications = [
+
         {
           id: 1,
+          title: "OCI Certified Developer - Professional 2025",
+          issuer: "Oracle Cloud",
+          date: "August 2025",
+          description: "Certifies my mastery of the entire cloud native lifecycle on OCI from developing and deploying scalable, secure serverless applications to expertly testing, monitoring and troubleshooting them.",
+          badge: "images/oracleDev.png",
+          downloadUrl: "/docs/Dev.pdf"
+        },
+        {
+          id: 2,
           title: "AWS Cloud Quest Cloud Practitioner",
           issuer: "Amazon Web Services",
           date: "June 2025",
@@ -382,7 +392,7 @@ function LinkedInPost({ post }) {
           downloadUrl: "/docs/AWS.pdf"
         },
         {
-          id: 2,
+          id: 3,
           title: "FNB Academy FullStack Certificate",
           issuer: "IT Varsity",
           date: "July 2025",
@@ -391,27 +401,27 @@ function LinkedInPost({ post }) {
           downloadUrl: "/docs/FullStack.pdf"
         },
         {
-          id: 3,
+          id: 4,
           title: "OCI Foundations - Associate",
           issuer: "Oracle Cloud",
           date: "July 2025",
           description: "Validates knowledge of Oracle Cloud Infrastructure fundamentals, including computing, storage, networking, and cloud security best practices.",
           badge: "images/oracle.png",
-          downloadUrl: "/docs/AWS.pdf"
+          downloadUrl: "/docs/ociFoundations.pdf"
         },
 
         {
-          id: 4,
+          id: 5,
           title: "OCI Artificial Intelligence Foundations - Associate",
           issuer: "Oracle Cloud",
           date: "August 2025",
           description: "Demonstrates the capability to leverage Oracle Cloud AI services for machine learning, natural language processing and data-driven solutions.",
           badge: "images/oracle.png",
-          downloadUrl: "/docs/AWS.pdf"
+          downloadUrl: "/docs/Ai.pdf"
         },
 
         {
-          id: 5,
+          id: 6,
           title: "IBM Cloud Fundamentals",
           issuer: "IBM",
           date: "May 2025",
@@ -420,7 +430,7 @@ function LinkedInPost({ post }) {
           downloadUrl: "/docs/IBM.pdf" 
         },
         {
-          id: 6,
+          id: 7,
           title: "CCNA: Introduction To Networks",
           issuer: "Cisco Networking Academy",
           date: "November 2024",
@@ -429,7 +439,7 @@ function LinkedInPost({ post }) {
           downloadUrl: "/docs/CCNA.pdf" 
         },
         {
-          id: 7,
+          id: 8,
           title: "AWS Educate: Introduction to Cloud 101",
           issuer: "Amazon Web Services",
           date: "June 2025",
@@ -438,7 +448,7 @@ function LinkedInPost({ post }) {
           downloadUrl: "/docs/AWS.pdf" 
         },
         {
-          id: 8,
+          id: 9,
           title: "Cisco IT Essentials",
           issuer: "Cisco Networking Academy",
           date: "June 2022",
@@ -615,6 +625,7 @@ function LinkedInPost({ post }) {
 
 </body>
 </html>
+
 
 
 
