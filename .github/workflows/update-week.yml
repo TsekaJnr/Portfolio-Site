@@ -14,7 +14,7 @@ jobs:
 
       - name: Update weeks in JS
         run: |
-          file="index.html"   # Change if linkedInPost is in another file
+          file="index.html"
         
           current=$(grep -oP '(?<=timeAgo: ")[0-9]+' "$file")
           next=$((current + 1))
