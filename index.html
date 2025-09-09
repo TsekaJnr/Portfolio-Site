@@ -74,6 +74,7 @@
 
     function App() {
       const [activeSection, setActiveSection] = React.useState('home');
+      const [isConverterOpen, setIsConverterOpen] = React.useState(false);
 
       const renderSection = () => {
         switch (activeSection) {
@@ -709,6 +710,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
