@@ -53,6 +53,7 @@
     .animation-delay-4000 { animation-delay: 4s; }
 
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100">
 
@@ -81,7 +82,7 @@
           case 'certifications':
             return <CertificationsSection />;
           case 'projects':
-            return <ProjectsSection />;
+            return <ProjectsSection openConverter={() => setIsConverterOpen(true)} />;
           case 'about':
             return <AboutSection />;
           case 'contact':
@@ -114,7 +115,8 @@
             {renderSection()}
           </main>
 
-       
+               {isConverterOpen && <ImageToPdfModal closeModal={() => setIsConverterOpen(false)} />}
+          
           <footer className="bg-gray-900 bg-opacity-90 backdrop-blur-sm text-center p-4 text-gray-400 text-sm mt-12">
             <p>&copy; {new Date().getFullYear()} Developed and Managed by Tseka Junior</p>
           </footer>
@@ -224,6 +226,69 @@ function LinkedInPost({ post }) {
   );
 }
 
+const ImageToPdfModal = ({ closeModal }) => {
+    const imageInputRef = React.useRef(null);
+    const [status, setStatus] = React.useState('Upload an image (JPG or PNG) to begin.');
+
+    const handleConvert = () => {
+        const imageInput = imageInputRef.current;
+        if (imageInput.files.length > 0) {
+            setStatus('Converting... please wait.');
+            const imageFile = imageInput.files[0];
+            const reader = new FileReader();
+
+            reader.readAsDataURL(imageFile);
+
+            reader.onload = function (e) {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const imgData = e.target.result;
+                const img = new Image();
+                
+                img.src = imgData;
+                img.onload = function () {
+                    const imgWidth = this.width;
+                    const imgHeight = this.height;
+                    const pdfWidth = doc.internal.pageSize.getWidth();
+                    const pdfHeight = doc.internal.pageSize.getHeight();
+                    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                    const imgY = (pdfHeight - imgHeight * ratio) / 2;
+
+                    doc.addImage(imgData, imageFile.type.split('/')[1].toUpperCase(), imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                    doc.save('converted-image.pdf');
+                    setStatus('Conversion successful! Check your downloads.');
+                };
+             };
+             reader.onerror = function () {
+                setStatus('Error reading the file.');
+            };
+        } else {
+            setStatus('Please select an image file first!');
+        }
+    }; 
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+            <div className="relative z-10 max-w-2xl w-full mx-auto bg-gray-800 bg-opacity-90 backdrop-blur-md p-8 md:p-12 rounded-xl shadow-2xl border border-gray-700">
+                <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-400 to-purple-500">
+                    Image to PDF Converter
+                </h2>
+                <p className="text-lg text-gray-300 mb-8">
+                   {status}
+                </p>
+
+                <div className="space-y-6">
+                    <input type="file" ref={imageInputRef} accept="image/png, image/jpeg" className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"/>
+                    <button onClick={handleConvert} className="w-full px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
+                        Convert to PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 
 
@@ -266,7 +331,7 @@ function LinkedInPost({ post }) {
 
                         “Commit your work to the Lord, and your plans will be established.” – Proverbs 16:3`,
                         image: "images/post.png",
-                        likes: 2118,
+                        likes: 2126,
                         comments: 111,
                         reposts: 5
                         };
@@ -491,58 +556,74 @@ function LinkedInPost({ post }) {
       );
     };
 
+    const ProjectsSection = ({ openConverter }) => { // <-- Note the new 'openConverter' prop
+  const projects = [
+    {
+      id: 1,
+      title: "VUT Chess Club Management System",
+      description: "A web-based platform for managing the VUT Chess Club. Features include player profiles, event scheduling, leaderboards, training check-ins, puzzles and suggestions. Admins manage members, events and performance, while players access personalized tools. Built with Firebase for secure data storage.",
+      technologies: ["Node.js", "Firebase Cloud", "Tailwind CSS", "HTML, CSS, JavaScript" ],
+      image: "images/vut.png",
+      liveDemoUrl: "https://vutchess-b7082.web.app/", 
+      githubRepoUrl: "https://github.com/TsekaJnr/VUT-Chess-Management-System" 
+    },
+    {
+      id: 2,
+      title: "Medical Cloud Migration Application",
+      description: "Designed and developed a cloud-based healthcare platform to digitize patient data and streamline clinic workflows. Leveraged AWS/Microsoft Azure for secure, scalable storage and implemented role-based access for staff. Focused on usability, efficiency and real-world healthcare impact.",
+      technologies: ["GCP(Google Cloud)", "React", "Python", "Node.js", "Face Recognition"],
+      image: "images/medical.png",
+      liveDemoUrl: "https://tsekajnr.github.io/Cloud-MedSite-Test1/",
+      githubRepoUrl: "https://github.com/TsekaJnr/Medical-Cloud-Migration-App" 
+    },
+    {
+      id: 3,
+      title: "Personal Portfolio Website",
+      description: "The very website you are currently viewing! Built with React and Tailwind CSS, demonstrating modern web development practices and responsive design.",
+      technologies: ["React", "Tailwind CSS", "HTML", "JavaScript"],
+      image: "images/port.png",
+      liveDemoUrl: "#", 
+      githubRepoUrl: "https://github.com/TsekaJnr/TsekaJrPortfolio.github.io"
+    },
+    {
+      id: 4,
+      title: "Image To PDF Converter",
+      description: "A client-side tool to convert JPG and PNG images into a PDF document. Built with React and jsPDF, and integrated directly into this portfolio.",
+      technologies: ["React", "jsPDF", "Tailwind CSS"],
+      image: "images/pdf-tool.png", 
+      isTool: true 
+    }
+  ];
 
-
-    const ProjectsSection = () => {
-      const projects = [
-        {
-          id: 1,
-          title: "VUT Chess Club Management System",
-          description: "A web-based platform for managing the VUT Chess Club. Features include player profiles, event scheduling, leaderboards, training check-ins, puzzles and suggestions. Admins manage members, events and performance, while players access personalized tools. Built with Firebase for secure data storage.",
-          technologies: ["Node.js", "Firebase Cloud", "Tailwind CSS", "HTML, CSS, JavaScript" ],
-          image: "images/vut.png",
-          liveDemoUrl: "https://vutchess-b7082.web.app/", 
-          githubRepoUrl: "https://github.com/TsekaJnr/VUT-Chess-Management-System" 
-        },
-        {
-          id: 2,
-          title: "Medical Cloud Migration Application",
-          description: "Designed and developed a cloud-based healthcare platform to digitize patient data and streamline clinic workflows. Leveraged AWS/Microsoft Azure for secure, scalable storage and implemented role-based access for staff. Focused on usability, efficiency and real-world healthcare impact.",
-          technologies: ["GCP(Google Cloud)", "React", "Python", "Node.js", "Face Recognition"],
-          image: "images/medical.png",
-          liveDemoUrl: "https://tsekajnr.github.io/Cloud-MedSite-Test1/",
-          githubRepoUrl: "https://github.com/TsekaJnr/Medical-Cloud-Migration-App" 
-        },
-        {
-          id: 3,
-          title: "Personal Portfolio Website",
-          description: "The very website you are currently viewing! Built with React and Tailwind CSS, demonstrating modern web development practices and responsive design.",
-          technologies: ["React", "Tailwind CSS", "HTML", "JavaScript"],
-          image: "images/port.png",
-          liveDemoUrl: "#", 
-          githubRepoUrl: "https://github.com/TsekaJnr/TsekaJrPortfolio.github.io"
-        }
-      ];
-
-      return (
-        <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)]">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-500">
-            My Projects
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map(project => (
-              <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700 hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col">
-                <img src={project.image} alt={`${project.title} Thumbnail`} className="w-full h-48 object-cover rounded-md mb-4 border border-gray-700" />
-                <h3 className="text-2xl font-semibold mb-2 text-pink-400">{project.title}</h3>
-                <p className="text-gray-300 mb-4 flex-grow">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.technologies.map((tech, index) => (
-                    <span key={index} className="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4 mt-auto">
+  return (
+    <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)]">
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-10 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-500">
+        My Projects
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projects.map(project => (
+          <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-xl border border-gray-700 hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex flex-col">
+            <img src={project.image} alt={`${project.title} Thumbnail`} className="w-full h-48 object-cover rounded-md mb-4 border border-gray-700" />
+            <h3 className="text-2xl font-semibold mb-2 text-pink-400">{project.title}</h3>
+            <p className="text-gray-300 mb-4 flex-grow">{project.description}</p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {project.technologies.map((tech, index) => (
+                <span key={index} className="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">
+                  {tech}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4 mt-auto">
+              {/* Conditional button rendering */}
+              {project.isTool ? (
+                <button
+                  onClick={openConverter}
+                  className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 text-center"
+                >
+                  Open Tool
+                </button>
+              ) : (
+                <>
                   <a
                     href={project.liveDemoUrl}
                     target="_blank"
@@ -559,13 +640,15 @@ function LinkedInPost({ post }) {
                   >
                     View on GitHub
                   </a>
-                </div>
-              </div>
-            ))}
+                </>
+              )}
+            </div>
           </div>
-        </section>
-      );
-    };
+        ))}
+      </div>
+    </section>
+  );
+};
 
     const AboutSection = () => (
       <section className="container mx-auto p-8 md:p-12 min-h-[calc(100vh-200px)] flex flex-col items-center justify-center">
@@ -626,6 +709,7 @@ function LinkedInPost({ post }) {
 
 </body>
 </html>
+
 
 
 
