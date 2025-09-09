@@ -3,7 +3,7 @@ name: Update Post Age
 on:
   schedule:
     - cron: "0 0 * * 0"
-  workflow_dispatch:       
+  workflow_dispatch:      
 
 jobs:
   update-week:
@@ -12,17 +12,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Update weeks in HTML
+      - name: Update weeks in JS
         run: |
           file="index.html"
-          current=$(grep -oP '(?<=id="post-age">)[0-9]+' "$file")
+          # Extract the current number before ' Weeks ago'
+          current=$(grep -oP '(?<=timeAgo: ")[0-9]+' "$file")
           next=$((current + 1))
-          sed -i "s/${current} Weeks ago/${next} Weeks ago/" "$file"
+          # Replace with incremented value
+          sed -i "s/timeAgo: \"${current} Weeks ago\"/timeAgo: \"${next} Weeks ago\"/" "$file"
+          echo "Updated timeAgo: ${current} → ${next}"
 
       - name: Commit changes
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "actions@github.com"
           git add index.html
-          git commit -m "Update post age to $next Weeks ago [skip ci]" || echo "No changes to commit"
+          git commit -m "Update post age to ${next} Weeks ago [skip ci]" || echo "No changes to commit"
           git push
