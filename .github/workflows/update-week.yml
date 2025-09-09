@@ -2,8 +2,8 @@ name: Update Post Age
 
 on:
   schedule:
-    - cron: "0 0 * * 0"   # Runs every Sunday at 00:00 UTC
-  workflow_dispatch:       # Allows manual trigger
+    - cron: "0 0 * * 0" 
+  workflow_dispatch:  
 
 jobs:
   update-week:
@@ -15,10 +15,10 @@ jobs:
       - name: Update weeks in JS
         run: |
           file="index.html"   # Change if linkedInPost is in another file
-          # Extract current number
+        
           current=$(grep -oP '(?<=timeAgo: ")[0-9]+' "$file")
           next=$((current + 1))
-          # Replace with incremented value
+          
           sed -i "s/timeAgo: \"${current} Weeks ago\"/timeAgo: \"${next} Weeks ago\"/" "$file"
           echo "Updated timeAgo: ${current} → ${next}"
 
