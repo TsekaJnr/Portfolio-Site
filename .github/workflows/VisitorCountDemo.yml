@@ -1,1 +1,35 @@
+name: Update Site Visits
 
+on:
+  schedule:
+    - cron: "*/1 * * * *"  # Runs every minute
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  update-visits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update site visits counter
+        run: |
+          file="index.html"
+          
+          current=$(grep -oP 'const visit = \K[0-9]+' "$file")
+          
+          # Increment the count
+          next=$((current + 1))
+          
+          sed -i "s/const visit = ${current};/const visit = ${next};/" "$file"
+          echo "Updated site visits: ${current} → ${next}"
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Auto-update: Site visits incremented to ${next} [skip ci]" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
