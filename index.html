@@ -71,24 +71,9 @@
       return <span dangerouslySetInnerHTML={{ __html: icons[iconName] }} />;
     };
 
-    function VisitorCounter() {
-    const [count, setCount] = React.useState('...');
-
-    React.useEffect(() => {
-    fetch('https://api.countapi.xyz/hit/tsekajunior-portfolio/visits')
-      .then(response => response.json())
-      .then(data => {
-        setCount(data.value);
-        })
-      .catch(error => {
-        console.error('Error fetching visitor count:', error);
-        setCount('N/A');
-        });
-        }, []);
-
-    return (
-    <p className="mt-2">Visitors: <span>{count}</span></p>
-    );
+    function visitCounter() {
+      const visit = 289;
+      return <p>Site Visits: {visit}</p>;
     }
 
     function App() {
@@ -139,7 +124,7 @@
           
           <footer className="bg-gray-900 bg-opacity-90 backdrop-blur-sm text-center p-4 text-gray-400 text-sm mt-12">
             <p>&copy; {new Date().getFullYear()} Developed and Managed by Tseka Junior</p>
-            <VisitorCounter />
+            <p>{visitCounter()}</p>
           </footer>
         </div>
       );
@@ -730,6 +715,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
