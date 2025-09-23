@@ -71,29 +71,29 @@
       return <span dangerouslySetInnerHTML={{ __html: icons[iconName] }} />;
     };
 
+    function VisitorCounter() {
+    const [count, setCount] = React.useState('...');
+
+    React.useEffect(() => {
+    fetch('https://api.countapi.xyz/hit/tsekajunior-portfolio/visits')
+      .then(response => response.json())
+      .then(data => {
+        setCount(data.value);
+        })
+      .catch(error => {
+        console.error('Error fetching visitor count:', error);
+        setCount('N/A');
+        });
+        }, []);
+
+    return (
+    <p className="mt-2">Visitors: <span>{count}</span></p>
+    );
+    }
 
     function App() {
       const [activeSection, setActiveSection] = React.useState('home');
       const [isConverterOpen, setIsConverterOpen] = React.useState(false);
-
-       React.useEffect(() => {
-    fetch('https://api.countapi.xyz/hit/tsekajunior-portfolio/visits')
-      .then(response => response.json())
-      .then(data => {
-  
-        const countElement = document.getElementById('visitor-count');
-        if (countElement) {
-          countElement.textContent = data.value;
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching visitor count:', error);
-        const countElement = document.getElementById('visitor-count');
-        if (countElement) {
-            countElement.textContent = 'N/A';
-        }
-      });
-      }, []);
 
       const renderSection = () => {
         switch (activeSection) {
@@ -139,7 +139,7 @@
           
           <footer className="bg-gray-900 bg-opacity-90 backdrop-blur-sm text-center p-4 text-gray-400 text-sm mt-12">
             <p>&copy; {new Date().getFullYear()} Developed and Managed by Tseka Junior</p>
-            <p className="mt-2">Visitors: <span id="visitor-count">Loading...</span></p>
+            <VisitorCounter />
           </footer>
         </div>
       );
@@ -730,6 +730,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
