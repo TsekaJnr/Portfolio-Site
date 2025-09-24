@@ -1019,17 +1019,23 @@ const ImageToPdfModal = ({ closeModal }) => {
     }
     
     function showGreeting() {
-      addMessage("Hi! I'm Junior’s AI assistant. How can I help you today?");
-      const quickBtnDiv = document.createElement("div");
-      quickBtnDiv.className = "quick-buttons";
-      ["About Me", "Projects", "Contact"].forEach(option => {
-        const btn = document.createElement("button");
-        btn.innerText = option;
-        btn.onclick = () => handleQuickButton(option);
-        quickBtnDiv.appendChild(btn);
-      });
-      messagesEl.appendChild(quickBtnDiv);
+  addMessage("Hi! I'm Junior’s AI assistant. How can I help you today?");
+  const quickBtnDiv = document.createElement("div");
+  quickBtnDiv.className = "quick-buttons";
+  ["About Me", "Projects", "Hire Me"].forEach(option => {
+    const btn = document.createElement("button");
+    btn.innerText = option;
+    
+    if (option === "Hire Me") {
+      btn.onclick = () => handleQuickButton('Contact');
+    } else {
+      btn.onclick = () => handleQuickButton(option);
     }
+    
+    quickBtnDiv.appendChild(btn);
+  });
+  messagesEl.appendChild(quickBtnDiv);
+  }
 
     function loadChatHistory() {
   const history = localStorage.getItem('chat_history');
@@ -1050,6 +1056,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
