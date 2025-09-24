@@ -1005,7 +1005,7 @@ const ImageToPdfModal = ({ closeModal }) => {
           const projectsData = await getFirebaseData('projects');
           reply = projectsData ? projectsData.summary : "I couldn't find project details.";
           matchFound = true;
-      } else if (text.includes('contact')) {
+      } else if (text.includes('contact') || text.includes('hire me')) { // TeachING the bot to understand 'hire me'
           const contactData = await getFirebaseData('contact');
           reply = contactData ? ` ${contactData.email}\n` : "Contact information is unavailable.";
           matchFound = true;
@@ -1025,12 +1025,11 @@ const ImageToPdfModal = ({ closeModal }) => {
   ["About Me", "Projects", "Hire Me"].forEach(option => {
     const btn = document.createElement("button");
     btn.innerText = option;
-    
-    if (option === "Hire Me") {
-      btn.onclick = () => handleQuickButton('Contact');
-    } else {
-      btn.onclick = () => handleQuickButton(option);
-    }
+    btn.onclick = () => handleQuickButton(option); // Simplified: Always pass the button's own text
+    quickBtnDiv.appendChild(btn);
+  });
+  messagesEl.appendChild(quickBtnDiv);
+  }
     
     quickBtnDiv.appendChild(btn);
   });
@@ -1056,3 +1055,4 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
