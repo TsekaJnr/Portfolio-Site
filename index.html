@@ -1007,7 +1007,7 @@ const ImageToPdfModal = ({ closeModal }) => {
           matchFound = true;
       } else if (text.includes('contact')) {
           const contactData = await getFirebaseData('contact');
-          reply = contactData ? ` ${contactData.email}\nLinkedIn: ${contactData.linkedin}` : "Contact information is unavailable.";
+          reply = contactData ? ` ${contactData.email}\n` : "Contact information is unavailable.";
           matchFound = true;
       }
 
@@ -1056,6 +1056,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
