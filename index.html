@@ -940,7 +940,7 @@ const ImageToPdfModal = ({ closeModal }) => {
             return { error: "Database not connected." };
         }
         try {
-            const docRef = doc(db, `/artifacts/${appId}/public/data/chatbot-data`, docId);
+            const docRef = doc(db, 'chatbot-data', docId);
             const docSnap = await getDoc(docRef);
             return docSnap.exists() ? docSnap.data() : null;
         } catch (error) {
@@ -1014,6 +1014,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
