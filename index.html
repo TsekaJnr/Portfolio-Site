@@ -61,6 +61,117 @@
     .animation-delay-2000 { animation-delay: 2s; }
     .animation-delay-4000 { animation-delay: 4s; }
 
+    #chatbot-container {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-end;
+    }
+    #chatbot-bubble {
+      width: 65px;
+      height: 65px;
+      background: linear-gradient(135deg, #6B21A8, #3B82F6);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease-out;
+    }
+    #chatbot-bubble:hover {
+        transform: scale(1.1);
+    }
+    #chatbot-window {
+      width: 350px;
+      height: 450px;
+      background: #2D3748;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+      transform-origin: bottom right;
+      margin-bottom: 15px;
+    }
+    #chatbot-window.hidden {
+      transform: scale(0);
+      opacity: 0;
+    }
+    #chatbot-header {
+      background: #1F2937;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      border-bottom: 1px solid #4A5568; 
+    }
+    #chatbot-close {
+        background: none;
+        border: none;
+        color: #A0AEC0;
+        font-size: 24px;
+        cursor: pointer;
+        line-height: 1;
+    }
+    #chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      color: #E2E8F0; /* gray-300 */
+    }
+    .message {
+      margin-bottom: 12px;
+      padding: 10px 15px;
+      border-radius: 18px;
+      max-width: 85%;
+      clear: both;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+    .bot { background: #4A5568; float: left; }
+    .user { background: #3B82F6; color: white; float: right; }
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        float: left;
+    }
+    .typing-indicator span {
+        height: 8px; width: 8px; margin: 0 2px;
+        background-color: #718096;
+        border-radius: 50%;
+        display: inline-block;
+        animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+    #chatbot-input-area { display: flex; border-top: 1px solid #4A5568; }
+    #chatbot-input {
+      flex: 1; padding: 15px; border: none; outline: none;
+      background: #1F2937; color: white;
+    }
+    #chatbot-send {
+      background: #3B82F6; color: white; border: none;
+      padding: 0 20px; cursor: pointer; font-weight: bold;
+    }
+    .quick-buttons { margin-top: 10px; clear: both; }
+    .quick-buttons button {
+      margin: 4px; padding: 8px 12px; border: 1px solid #3B82F6;
+      border-radius: 15px; cursor: pointer; background: transparent;
+      color: #60A5FA; transition: all 0.2s;
+    }
+    .quick-buttons button:hover { background: #3B82F6; color: white; }
+
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -571,7 +682,7 @@ const ImageToPdfModal = ({ closeModal }) => {
       );
     };
 
-    const ProjectsSection = ({ openConverter }) => { // <-- Note the new 'openConverter' prop
+    const ProjectsSection = ({ openConverter }) => {
   const projects = [
     {
       id: 1,
@@ -722,8 +833,188 @@ const ImageToPdfModal = ({ closeModal }) => {
 
   </script>
 
+  <div id="chatbot-container">
+    <div id="chatbot-bubble">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </div>
+    <div id="chatbot-window" class="hidden">
+      <div id="chatbot-header">
+        <span>Tseka's Assistant Bot</span>
+        <button id="chatbot-close">&times;</button>
+      </div>
+      <div id="chatbot-messages"></div>
+      <div id="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="Ask me about projects..." />
+        <button id="chatbot-send">Send</button>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    
+    const bubble = document.getElementById("chatbot-bubble");
+    const windowEl = document.getElementById("chatbot-window");
+    const closeBtn = document.getElementById("chatbot-close");
+    const sendBtn = document.getElementById("chatbot-send");
+    const inputEl = document.getElementById("chatbot-input");
+    const messagesEl = document.getElementById("chatbot-messages");
+
+   
+    let db;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-portfolio-app';
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnUOeeuf9iivt_N-Q3WCaPQ5XqZFo_OyY",
+      authDomain: "portfolio-chatbot-410ba.firebaseapp.com",
+      projectId: "portfolio-chatbot-410ba",
+      storageBucket: "portfolio-chatbot-410ba.firebasestorage.app",
+      messagingSenderId: "156609856155",
+      appId: "1:156609856155:web:7fc04c36be859de302fc3e",
+      measurementId: "G-ZV6B7HSVYM"
+    };
+
+    if (Object.keys(firebaseConfig).length > 0) {
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            const auth = getAuth(app);
+            
+           
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log("Chatbot authenticated anonymously.", user.uid);
+                    showGreeting();
+                }
+            });
+
+            signInAnonymously(auth).catch((error) => {
+                console.error("Anonymous sign-in failed:", error);
+                addMessage("Could not connect to the chat service.", "bot");
+            });
+
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
+            addMessage("Chatbot failed to initialize.", "bot");
+        }
+    } else {
+        console.warn("Firebase config is empty. Chatbot will not function.");
+    }
+    
+    bubble.onclick = () => windowEl.classList.toggle("hidden");
+    closeBtn.onclick = () => windowEl.classList.add("hidden");
+    sendBtn.onclick = handleUserInput;
+    inputEl.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") handleUserInput();
+    });
+
+    function addMessage(text, sender = "bot") {
+      const msg = document.createElement("div");
+      msg.className = `message ${sender}`;
+      msg.innerHTML = text.replace(/\n/g, '<br>');
+      messagesEl.appendChild(msg);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const typingEl = document.createElement("div");
+        typingEl.className = "typing-indicator";
+        typingEl.innerHTML = `<span></span><span></span><span></span>`;
+        typingEl.id = "typing-indicator";
+        messagesEl.appendChild(typingEl);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+        const typingEl = document.getElementById("typing-indicator");
+        if (typingEl) {
+            typingEl.remove();
+        }
+    }
+
+    async function getFirebaseData(docId) {
+        if (!db) {
+            console.error("Firestore is not initialized.");
+            return { error: "Database not connected." };
+        }
+        try {
+            const docRef = doc(db, `/artifacts/${appId}/public/data/chatbot-data`, docId);
+            const docSnap = await getDoc(docRef);
+            return docSnap.exists() ? docSnap.data() : null;
+        } catch (error) {
+            console.error("Error fetching from Firestore:", error);
+            return { error: "Failed to fetch data." };
+        }
+    }
+
+    async function handleUserInput() {
+      const text = inputEl.value.trim().toLowerCase();
+      if (!text) return;
+      addMessage(text, "user");
+      inputEl.value = "";
+      showTypingIndicator();
+
+      
+      const keywordsData = await getFirebaseData('keywords');
+      
+      hideTypingIndicator();
+
+      if (!keywordsData || keywordsData.error) {
+        addMessage("Sorry, I'm having trouble connecting to my brain right now.", "bot");
+        return;
+      }
+      
+      let reply = keywordsData.default_reply || "I'm not sure how to answer that. Try asking about 'projects', 'about me', or 'contact'.";
+      let matchFound = false;
+
+     
+      for (const key in keywordsData.responses) {
+        if (text.includes(key)) {
+            reply = keywordsData.responses[key];
+            matchFound = true;
+            break;
+        }
+      }
+
+      
+      if (text.includes('project')) {
+          const projectsData = await getFirebaseData('projects');
+          reply = projectsData ? projectsData.summary : "I couldn't find project details.";
+          matchFound = true;
+      } else if (text.includes('contact')) {
+          const contactData = await getFirebaseData('contact');
+          reply = contactData ? `You can reach Junior via:\nEmail: ${contactData.email}\nLinkedIn: ${contactData.linkedin}` : "Contact information is unavailable.";
+          matchFound = true;
+      }
+
+      addMessage(reply, "bot");
+    }
+    
+    function showGreeting() {
+      addMessage("Hi! I'm Junior’s AI assistant. How can I help you today?");
+      const quickBtnDiv = document.createElement("div");
+      quickBtnDiv.className = "quick-buttons";
+      ["About Me", "Projects", "Contact"].forEach(option => {
+        const btn = document.createElement("button");
+        btn.innerText = option;
+        btn.onclick = () => handleQuickButton(option);
+        quickBtnDiv.appendChild(btn);
+      });
+      messagesEl.appendChild(quickBtnDiv);
+    }
+
+    function handleQuickButton(option) {
+       
+        inputEl.value = option;
+        handleUserInput();
+    }
+  </script>
+
 </body>
 </html>
+
 
 
 
