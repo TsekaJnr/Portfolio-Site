@@ -851,7 +851,7 @@ const ImageToPdfModal = ({ closeModal }) => {
   </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
     
@@ -934,6 +934,19 @@ const ImageToPdfModal = ({ closeModal }) => {
         }
     }
 
+    async function logUnansweredQuery(queryText) {
+        if (!db) return;
+        try {
+            const docRef = await addDoc(collection(db, "unanswered_queries"), {
+                query: queryText,
+                timestamp: serverTimestamp()
+            });
+            console.log("Logged unanswered query with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
     async function getFirebaseData(docId) {
         if (!db) {
             console.error("Firestore is not initialized.");
@@ -989,6 +1002,10 @@ const ImageToPdfModal = ({ closeModal }) => {
           matchFound = true;
       }
 
+      if (!matchFound) {
+      logUnansweredQuery(text); // Call the logging function with the user's text
+      }
+
       addMessage(reply, "bot");
     }
     
@@ -1014,6 +1031,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
