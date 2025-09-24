@@ -839,9 +839,17 @@ const ImageToPdfModal = ({ closeModal }) => {
     </div>
     <div id="chatbot-window" class="hidden">
       <div id="chatbot-header">
-        <span>Tseka's Assistant Bot</span>
-        <button id="chatbot-close">&times;</button>
-      </div>
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+        <path d="M12 3a6 6 0 0 0-6 6v6a6 6 0 0 0 6 6Z"/>
+        <path d="M16 3.05a6 6 0 0 1 6 6v6a6 6 0 0 1-6 6Z"/>
+        <path d="M12 21a6 6 0 0 1-6-6v-6a6 6 0 0 1 6-6Z"/>
+        <path d="M8 20.95A6 6 0 0 0 2 15V9a6 6 0 0 0 6-6Z"/>
+    </svg>
+    <span>Tseka's AI Assistant</span>
+  </div>
+  <button id="chatbot-close">&times;</button>
+</div>
       <div id="chatbot-messages"></div>
       <div id="chatbot-input-area">
         <input type="text" id="chatbot-input" placeholder="Ask me about projects..." />
@@ -1042,6 +1050,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
