@@ -916,6 +916,7 @@ const ImageToPdfModal = ({ closeModal }) => {
       msg.innerHTML = text.replace(/\n/g, '<br>');
       messagesEl.appendChild(msg);
       messagesEl.scrollTop = messagesEl.scrollHeight;
+      localStorage.setItem('chat_history', messagesEl.innerHTML);
     }
 
     function showTypingIndicator() {
@@ -1022,6 +1023,16 @@ const ImageToPdfModal = ({ closeModal }) => {
       messagesEl.appendChild(quickBtnDiv);
     }
 
+    function loadChatHistory() {
+  const history = localStorage.getItem('chat_history');
+  if (history) {
+    messagesEl.innerHTML = history;
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  } else {
+    showGreeting(); // Only show greeting if there's no history
+  }
+  }
+
     function handleQuickButton(option) {
        
         inputEl.value = option;
@@ -1031,6 +1042,7 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
 
