@@ -1025,7 +1025,7 @@ const ImageToPdfModal = ({ closeModal }) => {
   ["About Me", "Projects", "Hire Me"].forEach(option => {
     const btn = document.createElement("button");
     btn.innerText = option;
-    btn.onclick = () => handleQuickButton(option); // Simplified: Always pass the button's own text
+    btn.onclick = () => handleQuickButton(option);
     quickBtnDiv.appendChild(btn);
   });
   messagesEl.appendChild(quickBtnDiv);
@@ -1055,5 +1055,6 @@ const ImageToPdfModal = ({ closeModal }) => {
 
 </body>
 </html>
+
 
 
